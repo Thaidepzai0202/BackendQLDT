@@ -1,14 +1,43 @@
 const ClassRoom = require('../models/class.model');
+const Subject = require('../models/subject.model');
+const Teacher = require('../models/teacher.model');
+const Student = require('../models/student.model');
 
 
 const getClassRooms = async (req, res) => {
     try {
         const classRooms = await ClassRoom.find();
-        res.status(200).json(classRooms);
+        const classRoomPromises = classRooms.map(async (ex) => {
+            ex.dataSubject = await Subject.findOne({ "subjectID": ex.subjectID });
+            ex.dataTeacher = await Teacher.findOne({ "mscb": ex.mscb });
+            return ex;
+        });
+
+        const classRoom2s = await Promise.all(classRoomPromises);
+        res.status(200).json(classRoom2s);
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
+
+const getClassRoom = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const classRooms = await ClassRoom.find({"mscb" : id});
+        const classRoomPromises = classRooms.map(async (ex) => {
+            ex.dataSubject = await Subject.findOne({ "subjectID": ex.subjectID });
+            return ex;
+        });
+
+        const classRoom2s = await Promise.all(classRoomPromises);
+        res.status(200).json(classRoom2s);
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 
 const updateClassRoom = async (req, res) => {
     try {
@@ -28,6 +57,14 @@ const updateClassRoom = async (req, res) => {
 const addClassRoom = async (req, res) => {
     try {
         const classRoom1 = req.body;
+        const teacherCheck = await ClassRoom.find({ mscb: classRoom1.mscb, dayOfWeek: classRoom1.dayOfWeek });
+        let isBusyTeacher = false;
+        for (let room of teacherCheck) {
+            if (hasCommonNumber(classRoom1.classSession, room.classSession)) {
+                isBusyTeacher = true;
+                break;
+            }
+        }
         const classRoomCheck = await ClassRoom.find({ className: classRoom1.className, dayOfWeek: classRoom1.dayOfWeek });
         let isBusy = false;
         for (let room of classRoomCheck) {
@@ -37,11 +74,15 @@ const addClassRoom = async (req, res) => {
             }
         }
 
-        if (isBusy) {
+        if (isBusyTeacher) {
+            return res.status(405).json({ message: "Teacher this day is busy" });
+        } else if (isBusy) {
             return res.status(404).json({ message: "ClassRoom this day is busy" });
 
             // Tiếp tục logic khác nếu phòng học không bận
         } else {
+            classRoom1.semester = "20232";
+            classRoom1.dataSubject = null;
             const classRoom = await ClassRoom.create(classRoom1);
             res.status(200).json(classRoom);
         }
@@ -49,6 +90,7 @@ const addClassRoom = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+
 
 
 function hasCommonNumber(str1, str2) {
@@ -74,8 +116,10 @@ function hasCommonNumber(str1, str2) {
 }
 
 
+
 module.exports = {
     getClassRooms,
     updateClassRoom,
-    addClassRoom
+    addClassRoom,
+    getClassRoom,
 }
