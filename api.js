@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 
 mongoose.connect(
-    'mongodb://localhost:27017/quanlydaotao', {
+    'mongodb+srv://nguyenthethai02022001:3qCKr2jT80jpA5Qh@quanlydaotao.aempkbm.mongodb.net/?retryWrites=true&w=majority&appName=quanlydaotao', {
 })
     .then((err, db) => {
         console.log('Connected to MongoDB');
