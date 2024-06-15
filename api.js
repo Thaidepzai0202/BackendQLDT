@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const express = require('express');
+const http = require("http");
 const Student = require('./models/student.model');
 const studentRoute = require('./routes/student.route');
 const teacherRoute = require('./routes/teacher.route');
@@ -35,11 +36,16 @@ app.use("/api/tests", testRoute);
 app.use("/api/assignment", assignmentRoute);
 app.use("/api/attendance", attendanceRoute);
 app.use("/api/studydocument", studyDocumentRoute);
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+  });
 
 const port = 3000
 // const port = 1234
 
-app.listen(port, () => {
+const server = http.createServer(app);
+
+server.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
 
