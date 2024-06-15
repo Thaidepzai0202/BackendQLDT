@@ -36,7 +36,7 @@ app.use("/api/assignment", assignmentRoute);
 app.use("/api/attendance", attendanceRoute);
 app.use("/api/studydocument", studyDocumentRoute);
 
-const port = 3000
+const port = 1234
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
