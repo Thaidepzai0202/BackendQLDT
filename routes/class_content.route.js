@@ -5,7 +5,8 @@ const {
     addClassContent,
     getClassContent,
     showListStudent,
-    updatePoint
+    updatePoint,
+    addListStudent
 } = require('../controller/class_content.controller')
 
 
@@ -18,7 +19,7 @@ router.get('/:id', getClassContent);
 
 router.post('/', addClassContent);
 
-router.post('/', addClassContent);
+router.post('/  ', addListStudent);
 
 router.get('/getListStudent/:id', showListStudent);
 

@@ -12,13 +12,13 @@ const getProducts = async (req, res) => {
 
 const getProduct = async (req, res) => {
     try {
-        const { id } = req.params;
-        const product = await Product.findOneAndUpdate({ name: id }, req.body);
-        if (!product) {
-            return res.status(404).json({ message: "Product not Found" });
-        }
-        const updateProduct = await Product.find({ name: id });
-        res.status(200).json({ updateProduct });
+        // const { id } = req.params;
+        // const product = await Product.findOneAndUpdate({ name: id }, req.body);
+        // if (!product) {
+        //     return res.status(404).json({ message: "Product not Found" });
+        // }
+        // const updateProduct = await Product.find({ name: id });
+        // res.status(200).json({ updateProduct });
 
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -27,7 +27,9 @@ const getProduct = async (req, res) => {
 
 const addProduct = async (req, res) => {
     try {
-        const product = await Product.create(req.body);
+        const productClient = req.body;
+        // console.log(productClient);
+        const product = await Product.create(productClient);
         res.status(200).json(product);
     } catch (error) {
         res.status(500).json({ message: error.message })

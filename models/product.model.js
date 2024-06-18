@@ -1,26 +1,41 @@
-const timestamps = require('mongoo/lib/plugins/timestamps');
 const mongoose = require('mongoose');
-const ProductSchema = mongoose.Schema({
+// const timestamps = require('mongoose-timestamp');
+
+const ProductSchema = new mongoose.Schema({
     name: {
         type: String,
-        require: true
+        required: true
     },
     quantity: {
         type: Number,
-        require: true,
+        required: true,
         default: 0
     },
     price: {
         type: Number,
-        require: true,
+        required: true,
         default: 0
     },
+    imagePath: {
+        type: String,
+        required: true
+    },
+    productID: {
+        type: String,
+        unique: true
+    },
+    createdAt: { type: Date, default: Date.now }
+});
 
-},
-    {
-        timestamps: true
-    }
-);
+ProductSchema.pre("save", async function (next) {
+    const lastProduct = await this.constructor.findOne().sort({ createdAt: -1 });
+    const lastID = lastProduct ? lastProduct.productID : 'product0000000';
+    const idNumber = parseInt(lastID.replace('product', ''), 10) + 1;
+    this.productID = 'product' + idNumber.toString().padStart(7, '0');
+    
+    next();
+});
 
-const Product = mongoose.model("products",ProductSchema);
+const Product = mongoose.model("Product", ProductSchema);
+
 module.exports = Product;

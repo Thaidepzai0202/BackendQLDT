@@ -68,6 +68,32 @@ const getClassContent = async (req, res) => {
 
 
 
+const addListStudent = async (req, res) => {
+    try {   
+        const bodyContent = req.body;
+        const checkClass = await ClassRoom.findOne({classID:bodyContent.classID});
+        if(!checkClass){
+            return res.status(404).json({message: "Class ID not found"});
+        }
+
+        bodyContent.listMSSV.forEach(async element => {
+            const checkStudent = await Student.findOne({mssv : element});
+            const checkStudentInClass = await ClassContent.findOne({mssv : element})
+            if(checkStudent && !checkStudentInClass){
+                const valueSave ={
+                    "mssv" : element,
+                    "classID" : bodyContent.classID
+                };
+                await ClassContent.create(valueSave);
+
+            }
+        });
+        
+        return res.status(200).json({message : "okeList"});
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
 const addClassContent = async (req, res) => {
     try {
         const classContent1 = req.body;
@@ -139,5 +165,6 @@ module.exports = {
     addClassContent,
     getClassContent,
     showListStudent,
-    updatePoint
+    updatePoint,
+    addListStudent
 }
