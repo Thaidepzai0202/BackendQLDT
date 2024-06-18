@@ -1,5 +1,5 @@
 // Import module mysql
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 // Tạo kết nối tới MySQL
 const connection = mysql.createConnection({
