@@ -4,8 +4,8 @@ const mysql = require('mysql');
 // Tạo kết nối tới MySQL
 const connection = mysql.createConnection({
   host: 'localhost',  // Thay 'localhost' bằng địa chỉ IP hoặc tên miền của MySQL server nếu cần thiết
-  user: 'thethai',  // Thay 'your_username' bằng tên người dùng MySQL của bạn
-  password: 'thai123h',  // Thay 'your_password' bằng mật khẩu MySQL của bạn
+  user: 'root',  // Thay 'your_username' bằng tên người dùng MySQL của bạn
+  password: 'Thai123h.',  // Thay 'your_password' bằng mật khẩu MySQL của bạn
   database: 'quanlydaotao'  // Thay 'your_database' bằng tên cơ sở dữ liệu MySQL bạn đang sử dụng
 });
 
