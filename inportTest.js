@@ -21,28 +21,21 @@ sequelize.authenticate()
     console.log('Connected to MySQL database successfully.');
   })
   .catch(err => {
-    console.error('Unable to connect to the database:', err);
+    console.error('Unable to connect to the databasessss:', err);
   });
 
-// Đồng bộ hóa cấu trúc của các bảng trong cơ sở dữ liệu MySQL
-// sequelize.sync()
-//   .then(() => {
-//     console.log('Database synchronized.');
+
+
+
+// mongoose.connect(
+//   'mongodb://localhost:27017/quanlydaotao', {
+// })
+//   .then((err, db) => {
+//     console.log('Connected to MongoDB LOCAL :27017');
 //   })
-//   .catch(err => {
-//     console.error('Unable to synchronize the database:', err);
+//   .catch((error) => {
+//     console.error('Error connecting to MongoDB:', error);
 //   });
-
-
-mongoose.connect(
-  'mongodb://localhost:27017/quanlydaotao', {
-})
-  .then((err, db) => {
-    console.log('Connected to MongoDB LOCAL :27017');
-  })
-  .catch((error) => {
-    console.error('Error connecting to MongoDB:', error);
-  });
 
 
 
