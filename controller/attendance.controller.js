@@ -113,11 +113,16 @@ const updateLockClass = async (req, res) => {
         const { classID } = req.params;
         const { lock } = req.body;
 
+        // Validate lock value
+        if (lock !== 0 && lock !== 1) {
+            return res.status(400).json({ message: "Lock value must be either 0 or 1" });
+        }
+
+        // Update all Attendance records with matching classID
         const result = await Attendance.update(
             { lock: lock },
             { where: { classID: classID } }
         );
-
 
         return res.status(200).json({ lock: lock });
     } catch (error) {
@@ -125,6 +130,7 @@ const updateLockClass = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
 
 
 
