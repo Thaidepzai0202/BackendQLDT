@@ -21,7 +21,7 @@ const getAttendanceInClass = async (req, res) => {
     try {
         const { classID } = req.params;
         const list = [];
-        
+
         // Tìm tất cả các bản ghi Attendance có classID tương ứng
         const listAttendance = await Attendance.findAll({ where: { classID: classID } });
 
@@ -111,7 +111,7 @@ const getLockClass = async (req, res) => {
 const updateLockClass = async (req, res) => {
     try {
         const { classID } = req.params;
-        const { lock } = req.body;
+        let { lock } = req.body;
 
         lock = parseInt(lock);
 
