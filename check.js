@@ -25,14 +25,13 @@ sequelize.authenticate().then(() => {
 const teacherRoute = require('./routes/teacher.route');
 const studentRoute = require('./routes/student.route');
 const subjectRoute = require('./routes/subject.route');
+const classRoute = require('./routes/class.route');
 
 //use
 app.use("/api/students", studentRoute);
 app.use("/api/teachers", teacherRoute);
+app.use("/api/classes", classRoute);
 app.use("/api/subjects", subjectRoute);
-
-
-
 
 
 const port = 3000
