@@ -36,26 +36,32 @@ const updateStudent = async (req, res) => {
 const addStudent = async (req, res) => {
     try {
         const student = req.body;
+
+        // Kiểm tra nếu thiếu trường nào đó
         if (!student.mssv || !student.name || !student.gender || !student.email || !student.password || !student.className || !student.course) {
-            return res.status(501).json({ message: "Please provide all firelds" });
+            return res.status(400).json({ message: "Please provide all fields" });
         }
+
+        // Kiểm tra xem MSSV đã tồn tại chưa
         const checkExisted = await Student.findOne({ where: { mssv: student.mssv } });
         if (checkExisted) {
-            return res.status(501).json({ message: "Mssv Existed" });
+            return res.status(409).json({ message: "Mssv already exists" });
         }
+
+        // Tạo mới student
         const success = await Student.create(student);
-        return res.status(200).json(success);
+        return res.status(201).json(success);
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        return res.status(500).json({ message: error.message });
     }
-}
+};
 
 ////////////////////////////
 const loginStudent = async (req, res) => {
     try {
         const { mssv, password } = req.body;
-        const student = await Student.findOne({where : { mssv: mssv }});
+        const student = await Student.findOne({ where: { mssv: mssv } });
         if (!student) {
             return res.status(404).json({ message: "Wrong mssv" });
         }
