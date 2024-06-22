@@ -1,5 +1,8 @@
 const Sequelize = require("sequelize");
+const express = require('express');
+const http = require("http");
 
+const app = express();
 const sequelize = new Sequelize(
    'quanlydaotao',
    'root',
@@ -15,3 +18,17 @@ sequelize.authenticate().then(() => {
 }).catch((error) => {
    console.error('Unable to connect to the database: ', error);
 });
+
+const studentRoute = require('./routes/student.route');
+app.use("/api/students", studentRoute);
+
+
+
+const port = 3000
+// const port = 1234
+
+const server = http.createServer(app);
+
+server.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+})
