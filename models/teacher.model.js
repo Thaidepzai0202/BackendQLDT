@@ -1,38 +1,42 @@
-const mongoose = require('mongoose');
-const TeacherSchema = mongoose.Schema({
+const { Sequelize, DataTypes } = require("sequelize");
+const sequelize = require('../database');
+
+const Teacher = sequelize.define('Teacher',{
     name: {
-        type: String,
-        require: true
+        type: DataTypes.STRING,
+        allowNull: false
     },
     mscb: {
-        type: String,
-        require: true,
-        unique: true
+        type: DataTypes.STRING,
+        allowNull: false,
+        primaryKey: true
     },
     gender: {
-        type: String,
-        require: true,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     email: {
-        type: String,
-        require: true,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     password: {
-        type: String,
-        require: true,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     position: {
-        type: String,
-        require: true,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     faculty: {
-        type: String,
-        require: true,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
 
 
-},
+},{
+    tableName : "teachers",
+    timestamps : false
+}
 );
 
-const Teacher = mongoose.model("teachers", TeacherSchema);
 module.exports = Teacher;

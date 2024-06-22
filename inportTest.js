@@ -1,47 +1,73 @@
-// Import module mysql
-const mysql = require('mysql2');
+const mongoose = require('mongoose');
+const express = require('express');
+const http = require("http");
+const app = express();
+app.use(express.json());
+const { Sequelize } = require('sequelize');
 
-// Tạo kết nối tới MySQL
-const connection = mysql.createConnection({
-  host: 'localhost',  // Thay 'localhost' bằng địa chỉ IP hoặc tên miền của MySQL server nếu cần thiết
-  user: 'root',  // Thay 'your_username' bằng tên người dùng MySQL của bạn
-  password: 'Thai123h.',  // Thay 'your_password' bằng mật khẩu MySQL của bạn
-  database: 'quanlydaotao'  // Thay 'your_database' bằng tên cơ sở dữ liệu MySQL bạn đang sử dụng
+
+
+
+// Kết nối Sequelize đến MySQL
+const sequelize = new Sequelize('quanly', 'root', '', {
+  host: 'localhost',
+  dialect: 'mysql',
+  logging: false, // Tắt logging SQL queries
 });
 
-// Kết nối tới MySQL
-connection.connect(function(err) {
-  if (err) {
-    console.error('Lỗi kết nối: ' + err.stack);
-    return;
-  }
-  console.log('Kết nối thành công với id ' + connection.threadId);
-});
-
-// Hàm để thêm sinh viên vào bảng students
-function addStudent(student) {
-  const { mssv, name, gender, email, password, className, course } = student;
-  const sql = 'INSERT INTO students (mssv, name, gender, email, password, className, course) VALUES (?, ?, ?, ?, ?, ?, ?)';
-  const values = [mssv, name, gender, email, password, className, course];
-
-  connection.query(sql, values, function(err, result) {
-    if (err) throw err;
-    console.log(`Thêm sinh viên ${name} thành công!`);
+// Kiểm tra kết nối Sequelize
+sequelize.authenticate()
+  .then(() => {
+    console.log('Connected to MySQL database successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
   });
-}
 
-// Sử dụng hàm addStudent để thêm sinh viên
-const newStudent = {
-  mssv: '123456789',
-  name: 'Nguyen Van A',
-  gender: 'Male',
-  email: 'nguyenvana@example.com',
-  password: 'securepassword',
-  className: 'Class A',
-  course: 'Computer Science'
-};
+// Đồng bộ hóa cấu trúc của các bảng trong cơ sở dữ liệu MySQL
+// sequelize.sync()
+//   .then(() => {
+//     console.log('Database synchronized.');
+//   })
+//   .catch(err => {
+//     console.error('Unable to synchronize the database:', err);
+//   });
 
-addStudent(newStudent);
 
-// Đóng kết nối sau khi thực hiện xong các thao tác
-connection.end();
+mongoose.connect(
+  'mongodb://localhost:27017/quanlydaotao', {
+})
+  .then((err, db) => {
+    console.log('Connected to MongoDB LOCAL :27017');
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+  });
+
+
+
+
+// //route
+const studentRoute = require('./routes/student.route');
+const teacherRoute = require('./routes/teacher.route');
+// const subjectRoute = require('./routes/subject.route');
+const classRoute = require('./routes/class.route');
+
+
+// //use route
+app.use("/api/students", studentRoute);
+app.use("/api/teachers", teacherRoute);
+// app.use("/api/subjects", subjectRoute);
+app.use("/api/classes", classRoute);
+
+
+
+
+
+const port = 3000;
+const server = http.createServer(app);
+
+server.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+

@@ -6,14 +6,14 @@ const Student = require('../models/student.model');
 
 const getClassRooms = async (req, res) => {
     try {
-        const classRooms = await ClassRoom.find();
-        const classRoomPromises = classRooms.map(async (ex) => {
-            ex.dataSubject = await Subject.findOne({ "subjectID": ex.subjectID });
-            ex.dataTeacher = await Teacher.findOne({ "mscb": ex.mscb });
-            return ex;
-        });
+        const classRooms = await ClassRoom.findAll();
+        // const classRoomPromises = classRooms.map(async (ex) => {
+        //     ex.dataSubject = await Subject.findOne({ "subjectID": ex.subjectID });
+        //     ex.dataTeacher = await Teacher.findOne({ "mscb": ex.mscb });
+        //     return ex;
+        // });
 
-        const classRoom2s = await Promise.all(classRoomPromises);
+        const classRoom2s = await Promise.all(classRooms);
         res.status(200).json(classRoom2s);
 
     } catch (error) {
@@ -24,7 +24,7 @@ const getClassRooms = async (req, res) => {
 const getClassRoom = async (req, res) => {
     try {
         const { id } = req.params;
-        const classRooms = await ClassRoom.find({"mscb" : id});
+        const classRooms = await ClassRoom.find({ "mscb": id });
         const classRoomPromises = classRooms.map(async (ex) => {
             ex.dataSubject = await Subject.findOne({ "subjectID": ex.subjectID });
             return ex;
@@ -42,12 +42,17 @@ const getClassRoom = async (req, res) => {
 const updateClassRoom = async (req, res) => {
     try {
         const { id } = req.params;
-        const classRoom = await ClassRoom.findOneAndUpdate({ classID: id }, req.body);
-        if (!classRoom) {
+        const [updatedRowsCount] = await ClassRoom.update(req.body, {
+            where: { classID: id }
+        });
+
+        if (updatedRowsCount === 0) {
             return res.status(404).json({ message: "ClassRoom not Found" });
         }
-        const updateClassRoom = await ClassRoom.find({ classID: id });
-        res.status(200).json({ updateClassRoom });
+
+        const updatedClassRoom = await ClassRoom.findOne({ where: { classID: id } });
+
+        res.status(200).json(updatedClassRoom );
 
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -56,8 +61,12 @@ const updateClassRoom = async (req, res) => {
 
 const addClassRoom = async (req, res) => {
     try {
+        // const newClassRoom = await ClassRoom.create(req.body);
+        // res.status(200).json(newClassRoom);
+
+
         const classRoom1 = req.body;
-        const teacherCheck = await ClassRoom.find({ mscb: classRoom1.mscb, dayOfWeek: classRoom1.dayOfWeek });
+        const teacherCheck = await ClassRoom.findAll({ where: { mscb: classRoom1.mscb, dayOfWeek: classRoom1.dayOfWeek } });
         let isBusyTeacher = false;
         for (let room of teacherCheck) {
             if (hasCommonNumber(classRoom1.classSession, room.classSession)) {
@@ -65,7 +74,7 @@ const addClassRoom = async (req, res) => {
                 break;
             }
         }
-        const classRoomCheck = await ClassRoom.find({ className: classRoom1.className, dayOfWeek: classRoom1.dayOfWeek });
+        const classRoomCheck = await ClassRoom.findAll({ where: { className: classRoom1.className, dayOfWeek: classRoom1.dayOfWeek } });
         let isBusy = false;
         for (let room of classRoomCheck) {
             if (hasCommonNumber(classRoom1.classSession, room.classSession)) {
@@ -81,8 +90,7 @@ const addClassRoom = async (req, res) => {
 
             // Tiếp tục logic khác nếu phòng học không bận
         } else {
-            classRoom1.semester = "20232";
-            classRoom1.dataSubject = null;
+            // classRoom1.semester = "20232";
             const classRoom = await ClassRoom.create(classRoom1);
             res.status(200).json(classRoom);
         }

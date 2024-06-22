@@ -18,24 +18,24 @@ const studyDocumentRoute = require('./routes/study_document.route');
 const app = express();
 app.use(express.json());
 
-mongoose.connect(
-    'mongodb+srv://nguyenthethai02022001:3qCKr2jT80jpA5Qh@quanlydaotao.aempkbm.mongodb.net/?retryWrites=true&w=majority&appName=quanlydaotao', {
-})
-    .then((err, db) => {
-        console.log('Connected to MongoDB');
-    })
-    .catch((error) => {
-        console.error('Error connecting to MongoDB:', error);
-    });
 // mongoose.connect(
-//     'mongodb://localhost:27017/quanlydaotao', {
+//     'mongodb+srv://nguyenthethai02022001:3qCKr2jT80jpA5Qh@quanlydaotao.aempkbm.mongodb.net/?retryWrites=true&w=majority&appName=quanlydaotao', {
 // })
 //     .then((err, db) => {
-//         console.log('Connected to MongoDB LOCAL :27017');
+//         console.log('Connected to MongoDB');
 //     })
 //     .catch((error) => {
 //         console.error('Error connecting to MongoDB:', error);
 //     });
+mongoose.connect(
+    'mongodb://localhost:27017/quanlydaotao', {
+})
+    .then((err, db) => {
+        console.log('Connected to MongoDB LOCAL :27017');
+    })
+    .catch((error) => {
+        console.error('Error connecting to MongoDB:', error);
+    });
 
 //route
 app.use("/api/products", productRoute);

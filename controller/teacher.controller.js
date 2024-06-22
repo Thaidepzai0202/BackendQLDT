@@ -1,11 +1,12 @@
 const Teacher = require('../models/teacher.model');
-const Student = require('../models/teacher.model');
+const connection = require('../connect');
+
 
 
 const getTeachers = async (req, res) => {
-    try {
-        const teachers = await Teacher.find();
-        res.status(200).json(teachers);
+    try {   
+        const data = await Teacher.findAll();
+        return res.status(200).json(data);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -14,12 +15,16 @@ const getTeachers = async (req, res) => {
 const updateTeacher = async (req, res) => {
     try {
         const { id } = req.params;
-        const teacher = await Teacher.findOneAndUpdate({ mscb: id }, req.body);
-        if (!teacher) {
+        const [updatedRowsCount] = await Teacher.update(req.body, {
+            where: { mscb: id }
+        });
+        if (updatedRowsCount === 0) {
             return res.status(404).json({ message: "Teacher not Found" });
         }
-        const updateTeacher = await Teacher.find({ mscb: id });
-        res.status(200).json({ updateTeacher: updateTeacher });
+        const updatedTeacher = await Teacher.findOne({
+            where: { mscb: id }
+        });
+        return res.status(200).json(updatedTeacher);
 
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -28,8 +33,18 @@ const updateTeacher = async (req, res) => {
 
 const addTeacher = async (req, res) => {
     try {
-        const teacher = await Teacher.create(req.body);
-        res.status(200).json(teacher);
+        const teacher = req.body;
+        if (!teacher.mscb || !teacher.name || !teacher.gender || !teacher.email || !teacher.password || !teacher.position || !teacher.faculty) {
+            return res.status(501).json({ message: "Please provide all firelds" });
+        }
+        const checkExisted = await Teacher.findOne({ where: { mscb: teacher.mscb } });
+        if (checkExisted) {
+            return res.status(501).json({ message: "Mscb Existed" });
+        }
+        const success = await Teacher.create(teacher);
+        return res.status(200).json(success);
+
+
     } catch (error) {
         res.status(500).json({ message: error.message })
     }

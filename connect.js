@@ -1,10 +1,59 @@
-mongoose.connect('mongodb://localhost:27017/demo', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => {
-    console.log('Connected to MongoDB');
-})
-.catch((error) => {
-    console.error('Error connecting to MongoDB:', error);
+// Import module mysql
+
+const mysql = require('mysql2/promise');
+
+// Tạo kết nối tới MySQL server thật 
+// const connection = mysql.createConnection({
+//   host: 'localhost',  
+//   user: 'root',  
+//   password: 'Thai123h.',  
+//   database: 'quanlydaotao'  
+// });
+
+// Tạo kết nối tới MySQL server local
+const connection = mysql.createPool({
+  host: 'localhost',  
+  user: 'root',  
+  // password: 'Thai123h.',  
+  database: 'quanly'  
 });
+
+// Kết nối tới MySQL
+// connection.connect(function(err) {
+//   if (err) {
+//     console.error('Lỗi kết nối: ' + err.stack);
+//     return;
+//   }
+//   console.log('Kết nối thành công với id ' + connection.threadId);
+// });
+
+
+module.exports = connection;
+
+
+// function addStudent(student) {
+//   const { mssv, name, gender, email, password, className, course } = student;
+//   const sql = 'INSERT INTO students (mssv, name, gender, email, password, className, course) VALUES (?, ?, ?, ?, ?, ?, ?)';
+//   const values = [mssv, name, gender, email, password, className, course];
+
+//   connection.query(sql, values, function(err, result) {
+//     if (err) throw err;
+//     console.log(`Thêm sinh viên ${name} thành công!`);
+//   });
+// }
+
+
+// const newStudent = {
+//   mssv: '123456789',
+//   name: 'Nguyen Van A',
+//   gender: 'Male',
+//   email: 'nguyenvana@example.com',
+//   password: 'securepassword',
+//   className: 'Class A',
+//   course: 'Computer Science'
+// };
+
+// // addStudent(newStudent);
+
+
+// connection.end();
