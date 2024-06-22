@@ -15,16 +15,23 @@ const Attendance = sequelize.define('Attendance', {
         defaultValue: 0,
     },
     dataAttendance: {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
-        defaultValue: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        type: DataTypes.STRING,
+        defaultValue: '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0', // Assuming this is the default value as a string
+        get() {
+            const value = this.getDataValue('dataAttendance');
+            return value ? value.split(',').map(Number) : [];
+        },
+        set(value) {
+            this.setDataValue('dataAttendance', value.join(','));
+        }
     },
 }, {
     tableName: "attendances",
     timestamps: false
 });
 
-
 module.exports = Attendance;
+
 
 
 
