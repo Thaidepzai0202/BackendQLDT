@@ -6,7 +6,7 @@ const ClassRoom = require('../models/class.model');
 const addAttendance = async (req, res) => {
     try {
         const attendance = req.body;
-        const check = await Attendance.findOne({ mssv: attendance.mssv, classID: attendance.classID });
+        const check = await Attendance.findOne({ where: { mssv: attendance.mssv, classID: attendance.classID } });
         if (!check) {
             const attendance2 = await Attendance.create(attendance);
             return res.status(200).json(attendance2);
@@ -21,10 +21,10 @@ const getAttendanceInClass = async (req, res) => {
     try {
         const { classID } = req.params;
         const list = [];
-        const listAttendance = await Attendance.find({ classID: classID });
+        const listAttendance = await Attendance.find({ where: { classID: classID } });
         for (let index = 0; index < listAttendance.length; index++) {
             const element = listAttendance[index];
-            const checkNameStudent = await Student.findOne({ mssv: element.mssv });
+            const checkNameStudent = await Student.findOne({ where: { mssv: element.mssv } });
 
             const attendWithName = {
                 ...element.toObject(),
@@ -44,28 +44,41 @@ const updateAttendanceInClass = async (req, res) => {
         const { classID } = req.params;
         const update = req.body;
 
-        const checkClassID = await ClassRoom.findOne({ classID: classID });
+        // Check if the classID exists in ClassRoom
+        const checkClassID = await ClassRoom.findOne({ where: { classID: classID } });
         if (!checkClassID) {
-            return res.status(401).json({ message: "Not found Class" });
+            return res.status(404).json({ message: "Class not found" });
         }
-        const updatePromise = update.map(element => {
-            return Attendance.findOneAndUpdate({ mssv: element.mssv, classID: classID }, element);
+
+        // Update Attendance records
+        const updatePromises = update.map(async (element) => {
+            const [attendance, created] = await Attendance.findOrCreate({
+                where: { mssv: element.mssv, classID: classID },
+                defaults: element
+            });
+
+            if (!created) {
+                await Attendance.update(element, {
+                    where: { mssv: element.mssv, classID: classID }
+                });
+            }
         });
 
-        await Promise.all(updatePromise);
+        await Promise.all(updatePromises);
 
-        const result = await Attendance.find({ classID: classID });
+        const result = await Attendance.findAll({ where: { classID: classID } });
+
         return res.status(200).json(result);
-
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error(error);
+        return res.status(500).json({ message: error.message });
     }
 }
 
 const getLockClass = async (req, res) => {
     try {
         const { classID } = req.params;
-        const result = await Attendance.find({ classID: classID });
+        const result = await Attendance.find({ where: { classID: classID } });
         if (!result || result.length === 0) {
             return res.status(404).json({ message: "No records found" });
         }
@@ -81,24 +94,16 @@ const updateLockClass = async (req, res) => {
         const { classID } = req.params;
         const { lock } = req.body;
 
-        // console.log("classID:", classID);
-        // console.log("lock value:", lock);
-
-        const result = await Attendance.updateMany(
-            { classID: classID },
-            { $set: { lock: lock } }
+        const result = await Attendance.update(
+            { lock: lock },
+            { where: { classID: classID } }
         );
 
-        // console.log("Update result:", result);
 
-        // Tìm lại tất cả các đối tượng đã cập nhật để trả về phản hồi
-        // const updatedResult = await Attendance.find({ classID: classID });
-        // console.log("Updated records:", updatedResult);
-
-        return res.status(200).json({lock : lock});
+        return res.status(200).json({ lock: lock });
     } catch (error) {
         console.error("Error:", error);
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 };
 
