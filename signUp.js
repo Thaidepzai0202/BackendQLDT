@@ -1,7 +1,7 @@
 // Import module mysql
 const mysql = require('mysql2');
-const app = express();
-app.use(express.json());
+// const app = express();
+// app.use(express.json());
 
 // Tạo kết nối tới MySQL server thật 
 const connection = mysql.createConnection({
