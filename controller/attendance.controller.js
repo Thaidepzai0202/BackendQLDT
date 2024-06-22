@@ -126,6 +126,8 @@ const updateLockClass = async (req, res) => {
             { where: { classID: classID } }
         );
 
+        console.log(result);
+
         return res.status(200).json({ lock: lock });
     } catch (error) {
         console.error("Error:", error);
