@@ -4,14 +4,8 @@ const connection = require('../connect');
 
 const getSubjects = async (req, res) => {
     try {
-        const data = await connection.query("SELECT * FROM subjects");
-        if (!data) {
-            return res.status(404).json({ message: "No subject found" })
-        }
-
-        return res.status(200).json(data[0]);
-        // const subjects = await Subject.find();
-        // res.status(200).json(subjects);
+        const data = await Subject.findAll();
+        return res.status(200).json(data);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -20,12 +14,12 @@ const getSubjects = async (req, res) => {
 const updateSubject = async (req, res) => {
     try {
         const { id } = req.params;
-        const subject = await Subject.findOneAndUpdate({ subjectID: id }, req.body);
-        if (!subject) {
+        const [updatedRowSubject] = await Subject.update(req.body, { where: { subjectID: id } });
+        if (updatedRowSubject === 0) {
             return res.status(404).json({ message: "Subject not Found" });
         }
-        const updateSubject = await Subject.find({ subjectID: id });
-        res.status(200).json({ updateSubject: updateSubject });
+        const updateSubject = await Subject.findOne({ where: { subjectID: id } });
+        res.status(200).json(updateSubject);
 
     } catch (error) {
         res.status(500).json({ message: error.message })

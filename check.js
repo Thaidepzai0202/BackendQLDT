@@ -24,9 +24,13 @@ sequelize.authenticate().then(() => {
 //route 
 const teacherRoute = require('./routes/teacher.route');
 const studentRoute = require('./routes/student.route');
+const subjectRoute = require('./routes/subject.route');
+
 //use
 app.use("/api/students", studentRoute);
 app.use("/api/teachers", teacherRoute);
+app.use("/api/subjects", subjectRoute);
+
 
 
 
