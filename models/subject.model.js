@@ -12,7 +12,7 @@ const Subject = sequelize.define('Subject',{
         primaryKey: true
     },
     credit: {
-        type: Number,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
 },{
