@@ -27,9 +27,14 @@ const getAttendanceInClass = async (req, res) => {
             const checkNameStudent = await Student.findOne({ where: { mssv: element.mssv } });
 
             const attendWithName = {
-                ...element.dataValues,
-                name: checkNameStudent.name
-            }
+                id: element.id,
+                classID: element.classID,
+                mssv: element.mssv,
+                lock: element.lock,
+                // Chuyển đổi dataAttendance từ chuỗi sang mảng số
+                dataAttendance: element.dataAttendance.split(',').map(Number),
+                name: checkNameStudent ? checkNameStudent.name : '' // Thêm tên học sinh nếu tìm thấy
+            };
             list.push(attendWithName);
         }
 
