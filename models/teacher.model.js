@@ -40,3 +40,11 @@ const Teacher = sequelize.define('Teacher',{
 );
 
 module.exports = Teacher;
+
+// sequelize.sync()
+//     .then(() => {
+//         console.log('Database & tables created!');
+//     })
+//     .catch(error => {
+//         console.error('Unable to create table:', error);
+//     });

@@ -21,8 +21,13 @@ sequelize.authenticate().then(() => {
    console.error('Unable to connect to the database: ', error);
 });
 
+//route 
+const teacherRoute = require('./routes/teacher.route');
 const studentRoute = require('./routes/student.route');
+//use
 app.use("/api/students", studentRoute);
+app.use("/api/teachers", teacherRoute);
+
 
 
 

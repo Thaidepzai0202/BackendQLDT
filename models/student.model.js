@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require('../database');
 
-const Student = sequelize.define('Student',{
+const Student = sequelize.define('Student', {
     name: {
         type: DataTypes.STRING,
         allowNull: false
@@ -33,7 +33,7 @@ const Student = sequelize.define('Student',{
     },
 
 
-},{
+}, {
     tabltableName: 'students',
     timestamps: false,
 }
@@ -42,9 +42,9 @@ const Student = sequelize.define('Student',{
 module.exports = Student;
 
 sequelize.sync()
-  .then(() => {
-    console.log('Database & tables created!');
-  })
-  .catch(error => {
-    console.error('Unable to create table:', error);
-  });
+    .then(() => {
+        console.log('Database & tables created!');
+    })
+    .catch(error => {
+        console.error('Unable to create table:', error);
+    });
