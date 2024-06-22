@@ -21,20 +21,33 @@ const getAttendanceInClass = async (req, res) => {
     try {
         const { classID } = req.params;
         const list = [];
+        
+        // Tìm tất cả các bản ghi Attendance có classID tương ứng
         const listAttendance = await Attendance.findAll({ where: { classID: classID } });
+
+        // Lặp qua từng bản ghi Attendance
         for (let index = 0; index < listAttendance.length; index++) {
             const element = listAttendance[index];
+
+            // Tìm bản ghi Student tương ứng bằng mssv từ Attendance
             const checkNameStudent = await Student.findOne({ where: { mssv: element.mssv } });
 
+            // Kiểm tra nếu dataAttendance là chuỗi, chuyển đổi thành mảng số
+            let dataAttendance = element.dataAttendance;
+            if (typeof dataAttendance === 'string') {
+                dataAttendance = dataAttendance.split(',').map(Number);
+            }
+
+            // Tạo đối tượng với dữ liệu Attendance và tên học sinh
             const attendWithName = {
                 id: element.id,
                 classID: element.classID,
                 mssv: element.mssv,
                 lock: element.lock,
-                // Chuyển đổi dataAttendance từ chuỗi sang mảng số
-                dataAttendance: element.dataAttendance.split(',').map(Number),
+                dataAttendance: dataAttendance,
                 name: checkNameStudent ? checkNameStudent.name : '' // Thêm tên học sinh nếu tìm thấy
             };
+
             list.push(attendWithName);
         }
 
@@ -42,7 +55,8 @@ const getAttendanceInClass = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+};
+
 
 const updateAttendanceInClass = async (req, res) => {
     try {
