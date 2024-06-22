@@ -21,7 +21,7 @@ const getAttendanceInClass = async (req, res) => {
     try {
         const { classID } = req.params;
         const list = [];
-        const listAttendance = await Attendance.find({ where: { classID: classID } });
+        const listAttendance = await Attendance.findAll({ where: { classID: classID } });
         for (let index = 0; index < listAttendance.length; index++) {
             const element = listAttendance[index];
             const checkNameStudent = await Student.findOne({ where: { mssv: element.mssv } });
@@ -78,7 +78,7 @@ const updateAttendanceInClass = async (req, res) => {
 const getLockClass = async (req, res) => {
     try {
         const { classID } = req.params;
-        const result = await Attendance.find({ where: { classID: classID } });
+        const result = await Attendance.findAll({ where: { classID: classID } });
         if (!result || result.length === 0) {
             return res.status(404).json({ message: "No records found" });
         }
