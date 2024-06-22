@@ -27,7 +27,7 @@ const getAttendanceInClass = async (req, res) => {
             const checkNameStudent = await Student.findOne({ where: { mssv: element.mssv } });
 
             const attendWithName = {
-                ...element.toObject(),
+                ...element.dataValues,
                 name: checkNameStudent.name
             }
             list.push(attendWithName);
