@@ -5,6 +5,7 @@ const { where } = require('sequelize');
 
 const getStudents = async (req, res) => {
     try {
+        console.log("vavavavav");
         const data = await Student.findAll();
         return res.status(200).json(data);
 
