@@ -113,6 +113,8 @@ const updateLockClass = async (req, res) => {
         const { classID } = req.params;
         const { lock } = req.body;
 
+        lock = parseInt(lock);
+
         // Validate lock value
         if (lock !== 0 && lock !== 1) {
             return res.status(400).json({ message: "Lock value must be either 0 or 1" });
