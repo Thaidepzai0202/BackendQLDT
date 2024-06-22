@@ -35,6 +35,10 @@ const updateStudent = async (req, res) => {
 
 const addStudent = async (req, res) => {
     try {
+        if (!req.body) {
+            return res.status(400).json({ message: "Request body is missing" });
+        }
+        console.log(req.body);
         const student = req.body;
 
         // Kiểm tra nếu thiếu trường nào đó
