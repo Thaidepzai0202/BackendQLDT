@@ -40,3 +40,11 @@ const Student = sequelize.define('Student',{
 );
 
 module.exports = Student;
+
+sequelize.sync()
+  .then(() => {
+    console.log('Database & tables created!');
+  })
+  .catch(error => {
+    console.error('Unable to create table:', error);
+  });
