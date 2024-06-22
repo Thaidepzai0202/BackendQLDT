@@ -4,20 +4,20 @@ const app = express();
 app.use(express.json());
 
 // Tạo kết nối tới MySQL server thật 
-// const connection = mysql.createConnection({
-//   host: 'localhost',  
-//   user: 'root',  
-//   password: 'Thai123h.',  
-//   database: 'quanlydaotao'  
-// });
-
-// Tạo kết nối tới MySQL server local
 const connection = mysql.createConnection({
   host: 'localhost',  
   user: 'root',  
-  // password: 'Thai123h.',  
-  database: 'quanly'  
+  password: 'Thai123h.',  
+  database: 'quanlydaotao'  
 });
+
+// Tạo kết nối tới MySQL server local
+// const connection = mysql.createConnection({
+//   host: 'localhost',  
+//   user: 'root',  
+//   // password: 'Thai123h.',  
+//   database: 'quanly'  
+// });
 
 // Kết nối tới MySQL
 connection.connect(function(err) {
@@ -42,7 +42,7 @@ function addStudent(student) {
 
 // Sử dụng hàm addStudent để thêm sinh viên
 const newStudent = {
-  mssv: '123456789',
+  mssv: '123456780',
   name: 'Nguyen Van A',
   gender: 'Male',
   email: 'nguyenvana@example.com',
