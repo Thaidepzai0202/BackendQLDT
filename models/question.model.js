@@ -16,6 +16,7 @@ const Question = sequelize.define('Question', {
     },
     dataAnswers: {
         type: DataTypes.STRING,
+        allowNull: true,
     },
     dataCorrectAnswer: {
         type: DataTypes.STRING,
