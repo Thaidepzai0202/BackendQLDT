@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Tệp này chứa cấu hình kết nối của bạn
+const sequelize = require('../database'); // Tệp này chứa cấu hình kết nối của bạn
 const ClassRoom = require('../models/class.model');
 const Attendance = require('../models/attendance.model');
 
