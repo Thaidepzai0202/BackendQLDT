@@ -9,29 +9,47 @@ const Assignment = require('../models/assignment.model');
 
 
 const addTest = async (req, res) => {
-
     try {
-        const test1 = req.body;
-        if (test1.idTest != null) {
-            console.log(test1.idTest);
-            const find = await Test.findOne({ idTest: test1.idTest });
-            if (find) {
-                // console.log(test1.dataQuestions);
-                await Test.findOneAndUpdate({ idTest: test1.idTest }, test1);
-                const test3 = await Test.findOne({ idTest: test1.idTest });
-                return res.status(200).json(test3);
+        const testInput = req.body;
+
+        // Tạo mảng để lưu id của các câu hỏi
+        const questionIDs = [];
+
+        // Tính tổng số điểm của các câu hỏi
+        let totalScore = 0;
+        if (testInput.dataQuestions && Array.isArray(testInput.dataQuestions)) {
+            for (const questionData of testInput.dataQuestions) {
+                const newQuestion = await Question.create(questionData);
+                questionIDs.push(newQuestion.idQuestion);
+                totalScore += questionData.score;
             }
         }
-        const test2 = await Test.create(test1);
-        return res.status(200).json(test2);
 
+        // Thêm các idQuestion vào listIDQuestion của testInput
+        testInput.listIDQuestion = questionIDs.join(',');
+
+        // Gán totalScore vào testInput
+        testInput.totalScore = totalScore;
+
+        // Kiểm tra nếu tồn tại idTest, thực hiện cập nhật
+        if (testInput.idTest) {
+            const existingTest = await Test.findOne({ where: { idTest: testInput.idTest } });
+            if (existingTest) {
+                await existingTest.update(testInput);
+                const updatedTest = await Test.findOne({ where: { idTest: testInput.idTest } });
+                return res.status(200).json(updatedTest);
+            }
+        }
+
+        // Nếu không tồn tại idTest, thực hiện thêm mới
+        const newTest = await Test.create(testInput);
+        return res.status(200).json(newTest);
 
     } catch (error) {
-
-        res.status(505).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
+};
 
-}
 
 const deleteTest = async (req, res) => {
 
