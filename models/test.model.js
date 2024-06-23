@@ -16,7 +16,7 @@ const Test = sequelize.define('Test', {
     },
     listIDQuestion: {
         type: DataTypes.STRING,
-        allowNull: false,
+        // allowNull: false,
         get() {
             const rawValue = this.getDataValue('listIDQuestion');
             if (!rawValue) {
