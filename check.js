@@ -5,6 +5,17 @@ const http = require("http");
 const app = express();
 app.use(express.json());
 
+// const sequelize = new Sequelize(
+//    'quanly',
+//    'root',
+//    '',
+//     {
+//       host: 'localhost',
+//       dialect: 'mysql',
+//       logging: false,
+//     }
+//   );
+
 const sequelize = new Sequelize(
    'quanlydaotao',
    'root',
@@ -30,6 +41,8 @@ const attendanceRoute = require('./routes/attendance.route');
 const classContentRoute = require('./routes/class_content.route');
 const studyDocumentRoute = require('./routes/study_document.route');
 const testRoute = require('./routes/test.route');
+const assignmentRoute = require('./routes/assignment.route');
+
 
 
 //use
@@ -41,6 +54,8 @@ app.use("/api/attendance", attendanceRoute);
 app.use("/api/classContents", classContentRoute);
 app.use("/api/studydocument", studyDocumentRoute);
 app.use("/api/tests", testRoute);
+app.use("/api/assignment", assignmentRoute);
+
 
 
 const port = 3000
