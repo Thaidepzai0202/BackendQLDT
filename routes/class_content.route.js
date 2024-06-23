@@ -19,7 +19,7 @@ router.get('/:id', getClassContent);
 
 router.post('/', addClassContent);
 
-router.post('/  ', addListStudent);
+router.post('/addListStudent', addListStudent);
 
 router.get('/getListStudent/:id', showListStudent);
 
