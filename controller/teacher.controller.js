@@ -4,7 +4,7 @@ const connection = require('../connect');
 
 
 const getTeachers = async (req, res) => {
-    try {   
+    try {
         const data = await Teacher.findAll();
         return res.status(200).json(data);
     } catch (error) {
@@ -52,7 +52,7 @@ const addTeacher = async (req, res) => {
 const loginTeacher = async (req, res) => {
     try {
         const { mscb, password } = req.body;
-        const teacher = await Teacher.findOne({ mscb: mscb });
+        const teacher = await Teacher.findOne({ where: { mscb: mscb } });
         if (!teacher) {
             return res.status(404).json({ message: "Wrong mscb" });
         }
