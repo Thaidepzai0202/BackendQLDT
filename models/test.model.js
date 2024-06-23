@@ -16,7 +16,7 @@ const Test = sequelize.define('Test', {
     },
     listIDQuestion: {
         type: DataTypes.STRING,
-        // allowNull: false,
+        allowNull: false,
         get() {
             const rawValue = this.getDataValue('listIDQuestion');
             if (!rawValue) {
@@ -35,6 +35,7 @@ const Test = sequelize.define('Test', {
     },
     totalScore: {
         type: DataTypes.INTEGER,
+        allowNull: false,
     },
     startTime: {
         type: DataTypes.DATE,
