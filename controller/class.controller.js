@@ -24,9 +24,9 @@ const getClassRooms = async (req, res) => {
 const getClassRoom = async (req, res) => {
     try {
         const { id } = req.params;
-        const classRooms = await ClassRoom.findAll({where :{ "mscb": id }});
+        const classRooms = await ClassRoom.findAll({ where: { "mscb": id } });
         const classRoomPromises = classRooms.map(async (ex) => {
-            ex.dataSubject = await Subject.findOne({where :{ "subjectID": ex.subjectID }});
+            ex.dataSubject = await Subject.findOne({ where: { "subjectID": ex.subjectID } });
             return ex;
         });
 
@@ -52,7 +52,7 @@ const updateClassRoom = async (req, res) => {
 
         const updatedClassRoom = await ClassRoom.findOne({ where: { classID: id } });
 
-        res.status(200).json(updatedClassRoom );
+        res.status(200).json(updatedClassRoom);
 
     } catch (error) {
         res.status(500).json({ message: error.message })
