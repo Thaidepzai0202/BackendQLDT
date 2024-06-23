@@ -7,7 +7,7 @@ const Student = require('../models/student.model');
 
 const getClassContents = async (req, res) => {
     try {
-        const classContents = await ClassContent.find();
+        const classContents = await ClassContent.findAll();
         res.status(200).json(classContents);
 
     } catch (error) {
@@ -17,12 +17,12 @@ const getClassContents = async (req, res) => {
 const showListStudent = async (req, res) => {
     try {
         const { id } = req.params;
-        const classContents = await ClassContent.find({ classID: id });
+        const classContents = await ClassContent.find({ where: { classID: id } });
 
         // Tạo một danh sách các promises để xử lý việc tìm kiếm Student
         const promises = classContents.map(async (room) => {
-            const roomObj = room.toObject(); // Chuyển đổi đối tượng Mongoose thành plain object
-            roomObj.dataStudent = await Student.findOne({ mssv: room.mssv });
+            const roomObj = room.get({ plain: true }); // Chuyển đổi đối tượng Sequelize thành plain object
+            roomObj.dataStudent = await Student.findOne({ where: { mssv: room.mssv } });
             return roomObj;
         });
 
@@ -40,20 +40,21 @@ const getClassContent = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Bước 1: Tìm tất cả các tài liệu trong ClassContent với mssv bằng id
-        const classContents = await ClassContent.find({ "mssv": id });
+        // Bước 1: Tìm tất cả các bản ghi trong ClassContent với mssv bằng id
+        const classContents = await ClassContent.findAll({ where: { mssv: id } });
 
         // Bước 2: Lấy danh sách các classID từ kết quả tìm kiếm
         const classIDs = classContents.map(content => content.classID);
 
         // Bước 3: Tìm các ClassRoom với các classID đã lấy
-        const classRooms = await ClassRoom.find({ "classID": { $in: classIDs } });
+        const classRooms = await ClassRoom.findAll({ where: { classID: classIDs } });
 
         // Bước 4: Thêm thông tin về Subject và Teacher vào các ClassRoom
         const classRoomPromises = classRooms.map(async (classRoom) => {
-            classRoom.dataSubject = await Subject.findOne({ "subjectID": classRoom.subjectID });
-            classRoom.dataTeacher = await Teacher.findOne({ "mscb": classRoom.mscb });
-            return classRoom;
+            const classRoomObj = classRoom.get({ plain: true }); // Chuyển đổi đối tượng Sequelize thành plain object
+            classRoomObj.dataSubject = await Subject.findOne({ where: { subjectID: classRoom.subjectID } });
+            classRoomObj.dataTeacher = await Teacher.findOne({ where: { mscb: classRoom.mscb } });
+            return classRoomObj;
         });
 
         const classRoom2s = await Promise.all(classRoomPromises);
@@ -69,31 +70,35 @@ const getClassContent = async (req, res) => {
 
 
 const addListStudent = async (req, res) => {
-    try {   
+    try {
         const bodyContent = req.body;
-        const checkClass = await ClassRoom.findOne({classID:bodyContent.classID});
-        if(!checkClass){
-            return res.status(404).json({message: "Class ID not found"});
+        const checkClass = await ClassRoom.findOne({ where: { classID: bodyContent.classID } });
+        if (!checkClass) {
+            return res.status(404).json({ message: "Class ID not found" });
         }
 
-        bodyContent.listMSSV.forEach(async element => {
-            const checkStudent = await Student.findOne({mssv : element});
-            const checkStudentInClass = await ClassContent.findOne({mssv : element})
-            if(checkStudent && !checkStudentInClass){
-                const valueSave ={
-                    "mssv" : element,
-                    "classID" : bodyContent.classID
+        const promises = bodyContent.listMSSV.map(async (element) => {
+            const checkStudent = await Student.findOne({ where: { mssv: element } });
+            const checkStudentInClass = await ClassContent.findOne({ where: { mssv: element, classID: bodyContent.classID } });
+
+            if (checkStudent && !checkStudentInClass) {
+                const valueSave = {
+                    mssv: element,
+                    classID: bodyContent.classID
                 };
                 await ClassContent.create(valueSave);
-
             }
         });
-        
-        return res.status(200).json({message : "okeList"});
+
+        await Promise.all(promises);
+
+        return res.status(200).json({ message: "okeList" });
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
-}
+};
+
+
 const addClassContent = async (req, res) => {
     try {
         const classContent1 = req.body;
@@ -124,17 +129,30 @@ const addClassContent = async (req, res) => {
 const updatePoint = async (req, res) => {
     try {
         const body = req.body;
-        const classHaved = await ClassContent.findOneAndUpdate({ "mssv": body.mssv, "classID": body.classID }, body);
-        if (!classHaved) {
+        const [updated] = await ClassContent.update(body, {
+            where: {
+                mssv: body.mssv,
+                classID: body.classID
+            }
+        });
+
+        if (!updated) {
             return res.status(404).json({ message: "Student in class not Found" });
         }
-        const updatePoint = await ClassContent.find({ "mssv": body.mssv, "classID": body.classID });
-        res.status(200).json(updatePoint);
+
+        const updatedPoint = await ClassContent.findOne({
+            where: {
+                mssv: body.mssv,
+                classID: body.classID
+            }
+        });
+
+        res.status(200).json(updatedPoint);
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
-}
+};
 
 
 function hasCommonNumber(str1, str2) {
