@@ -17,7 +17,7 @@ const getClassContents = async (req, res) => {
 const showListStudent = async (req, res) => {
     try {
         const { id } = req.params;
-        const classContents = await ClassContent.find({ where: { classID: id } });
+        const classContents = await ClassContent.findAll({ where: { classID: id } });
 
         // Tạo một danh sách các promises để xử lý việc tìm kiếm Student
         const promises = classContents.map(async (room) => {
