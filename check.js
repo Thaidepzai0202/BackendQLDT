@@ -28,6 +28,8 @@ const subjectRoute = require('./routes/subject.route');
 const classRoute = require('./routes/class.route');
 const attendanceRoute = require('./routes/attendance.route');
 const classContentRoute = require('./routes/class_content.route');
+const studyDocumentRoute = require('./routes/study_document.route');
+
 
 //use
 app.use("/api/students", studentRoute);
@@ -36,6 +38,7 @@ app.use("/api/classes", classRoute);
 app.use("/api/subjects", subjectRoute);
 app.use("/api/attendance", attendanceRoute);
 app.use("/api/classContents", classContentRoute);
+app.use("/api/studydocument", studyDocumentRoute);
 
 
 const port = 3000
