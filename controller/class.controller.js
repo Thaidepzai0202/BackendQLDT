@@ -25,9 +25,11 @@ const getClassRoom = async (req, res) => {
     try {
         const { id } = req.params;
         const classRooms = await ClassRoom.findAll({ where: { "mscb": id } });
+        // const listClassWithData = [];
         const classRoomPromises = classRooms.map(async (ex) => {
             ex.dataSubject = await Subject.findOne({ where: { "subjectID": ex.subjectID } });
-            return ex;
+            const dataSubject = await Subject.findOne({ where: { "subjectID": ex.subjectID } });
+            return {...ex.dataValues,dataSubject};
         });
 
         const classRoom2s = await Promise.all(classRoomPromises);
