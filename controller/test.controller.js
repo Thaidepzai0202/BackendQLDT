@@ -143,7 +143,7 @@ const getTest = async (req, res) => {
         }
 
         // Kiểm tra xem người dùng đã làm bài kiểm tra chưa
-        // const checkDid = await Assignment.findOne({ where: { mssv: mscb, idTest } });
+        const checkDid = await Assignment.findOne({ where: { mssv: mscb, idTest } });
 
         // Lấy thông tin lớp học của bài kiểm tra
         const classRoom = await ClassRoom.findOne({ where: { classID: test.classID } });
