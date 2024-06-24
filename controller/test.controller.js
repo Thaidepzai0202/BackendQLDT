@@ -1,6 +1,7 @@
 const Test = require('../models/test.model');
 const ClassRoom = require('../models/class.model');
 const Question = require('../models/question.model');
+const Assignment = require('../models/assignment.model')
 
 
 
