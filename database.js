@@ -3,18 +3,18 @@
 
 const { Sequelize } = require('sequelize');
 
-// const sequelize = new Sequelize('quanly', 'root', '', {
-//   host: 'localhost',
-//   dialect: 'mysql',
-//   logging: false,
-// });
-
-
-const sequelize = new Sequelize('quanlydaotao', 'root', 'Thai123h.', {
+const sequelize = new Sequelize('quanly', 'root', '', {
   host: 'localhost',
   dialect: 'mysql',
   logging: false,
 });
+
+
+// const sequelize = new Sequelize('quanlydaotao', 'root', 'Thai123h.', {
+//   host: 'localhost',
+//   dialect: 'mysql',
+//   logging: false,
+// });
 
 sequelize.authenticate()
   .then(() => {

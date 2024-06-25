@@ -5,26 +5,26 @@ const http = require("http");
 const app = express();
 app.use(express.json());
 
-// const sequelize = new Sequelize(
-//    'quanly',
-//    'root',
-//    '',
-//     {
-//       host: 'localhost',
-//       dialect: 'mysql',
-//       logging: false,
-//     }
-//   );
-
 const sequelize = new Sequelize(
-   'quanlydaotao',
+   'quanly',
    'root',
-   'Thai123h.',
+   '',
     {
       host: 'localhost',
-      dialect: 'mysql'
+      dialect: 'mysql',
+      logging: false,
     }
   );
+
+// const sequelize = new Sequelize(
+//    'quanlydaotao',
+//    'root',
+//    'Thai123h.',
+//     {
+//       host: 'localhost',
+//       dialect: 'mysql'
+//     }
+//   );
 
 sequelize.authenticate().then(() => {
    console.log('Connection has been established successfully.');
@@ -42,6 +42,7 @@ const classContentRoute = require('./routes/class_content.route');
 const studyDocumentRoute = require('./routes/study_document.route');
 const testRoute = require('./routes/test.route');
 const assignmentRoute = require('./routes/assignment.route');
+const leaveRequestRoute = require('./routes/leaverequest.route');
 
 
 
@@ -55,6 +56,7 @@ app.use("/api/classContents", classContentRoute);
 app.use("/api/studydocument", studyDocumentRoute);
 app.use("/api/tests", testRoute);
 app.use("/api/assignment", assignmentRoute);
+app.use("/api/leavereaquest", leaveRequestRoute);
 
 
 
