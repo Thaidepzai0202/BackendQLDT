@@ -1,12 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { addAttendance, getAttendanceInClass, updateAttendanceInClass, getLockClass, updateLockClass } = require('../controller/attendance.controller')
+const { addAttendance, getAttendanceInClass, updateAttendanceInClass, getLockClass, updateLockClass,updateAttendance } = require('../controller/attendance.controller')
 
 
 
 
 
 router.post('/doattendance/', addAttendance);
+
+router.post('/studentupdate/', updateAttendance);
 
 router.get('/doattendance/:classID', getAttendanceInClass);
 

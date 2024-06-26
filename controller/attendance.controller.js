@@ -17,6 +17,26 @@ const addAttendance = async (req, res) => {
     }
 }
 
+const updateAttendance = async (req, res) => {
+    try {
+        const attendance = req.body;
+        const check = await Attendance.findOne({ where: { mssv: attendance.mssv, classID: attendance.classID } });
+        if (check) {
+            if (check.lock == 1) {
+                let list = check.dataAttendance;
+                list[13] = 1;
+                check.dataAttendance = list;
+                await check.save();
+            }
+            return res.status(200).json(check);
+        }
+        return res.status(400).json({ message: "STudent no found" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
 const getAttendanceInClass = async (req, res) => {
     try {
         const { classID } = req.params;
@@ -143,5 +163,6 @@ module.exports = {
     getAttendanceInClass,
     updateAttendanceInClass,
     getLockClass,
-    updateLockClass
+    updateLockClass,
+    updateAttendance
 }

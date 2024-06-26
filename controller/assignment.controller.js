@@ -16,10 +16,10 @@ const submitAssignment = async (req, res) => {
             order: [['idAnswer', 'DESC']],
             attributes: ['idAnswer']
         });
-        console.log(lastAnswer);
+        // console.log(lastAnswer);
         let lastID = lastAnswer ? parseInt(lastAnswer.idAnswer.replace('ans', ''), 10) : 0;
         if (assignmentInput.dataAnswersStudent && Array.isArray(assignmentInput.dataAnswersStudent)) {
-            console.log(assignmentInput.dataAnswersStudent.leght);
+            // console.log(assignmentInput.dataAnswersStudent.leght);
 
             await Promise.all(assignmentInput.dataAnswersStudent.map(async (element) => {
                 try {

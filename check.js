@@ -5,26 +5,26 @@ const http = require("http");
 const app = express();
 app.use(express.json());
 
-const sequelize = new Sequelize(
-   'quanly',
-   'root',
-   '',
-    {
-      host: 'localhost',
-      dialect: 'mysql',
-      logging: false,
-    }
-  );
-
 // const sequelize = new Sequelize(
-//    'quanlydaotao',
+//    'quanly',
 //    'root',
-//    'Thai123h.',
+//    '',
 //     {
 //       host: 'localhost',
-//       dialect: 'mysql'
+//       dialect: 'mysql',
+//       logging: false,
 //     }
 //   );
+
+const sequelize = new Sequelize(
+   'quanlydaotao',
+   'root',
+   'Thai123h.',
+    {
+      host: 'localhost',
+      dialect: 'mysql'
+    }
+  );
 
 sequelize.authenticate().then(() => {
    console.log('Connection has been established successfully.');
