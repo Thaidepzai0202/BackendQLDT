@@ -107,8 +107,21 @@ const getAssignment = async (req, res) => {
     }
 };
 
+const getListAssignmentInClass =  async (req, res) => {
+    try {
+        const {idTest} = req.body;
+        const listAssignmentInClass = await  Assignment.findAll({where : {"idTest" : idTest}});
+        // const listAssignmentInClass = await  Assignment.findAll();
+        res.status(200).json(listAssignmentInClass);
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+} 
+
 
 module.exports = {
     submitAssignment,
-    getAssignment
+    getAssignment,
+    getListAssignmentInClass
 }

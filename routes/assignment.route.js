@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {submitAssignment,getAssignment } = require('../controller/assignment.controller')
+const {submitAssignment,getAssignment,getListAssignmentInClass } = require('../controller/assignment.controller')
 
 
 
@@ -12,7 +12,7 @@ router.get('/', getAssignment);
 
 router.post('/', submitAssignment);
 
-// router.post('/getTest', getTest);
+router.post('/getListTest', getListAssignmentInClass);
 
 
 module.exports = router;
